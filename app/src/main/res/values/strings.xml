@@ -3,8 +3,39 @@
     <string name="app_name">AutoRotate</string>
 
     <string name="back">Back</string>
+
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+
+    <string name="orientation_dynamic">Dynamic</string>
+    <string name="orientation_default">Default</string>
+    <string name="orientation_full_sensor">Full sensor</string>
+    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_reverse_landscape">Reverse landscape</string>
+    <string name="orientation_sensor_landscape">Sensor landscape</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_reverse_portrait">Reverse portrait</string>
+    <string name="orientation_sensor_portrait">Sensor portrait</string>
+    <string name="orientation_unknown">Unknown</string>
+
+    <string name="current_screen">Current Screen</string>
+    <string name="saved_orientation">Saved screen orientation for %1$s</string>
+    <string name="updated_orientation">Updated screen orientation for %1$s</string>
+    <string name="create_config">Create Configuration</string>
+    <string name="create_config_message">Create rotation configuration for current screen?\nScreen: %1$s</string>
+    <string name="unknown">Unknown</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="create_config_desc">Create configuration</string>
+    <string name="config_created">Configuration created</string>
+    <string name="current_screen_format">Current screen: %1$s</string>
+    <string name="not_detected">Not detected</string>
+    <string name="current_orientation_format">Current orientation: %1$s</string>
+    <string name="delete">Delete</string>
+    <string name="config_deleted">Deleted configuration for %1$s</string>
+    <string name="screen_format">Screen %1$s</string>
+    <string name="display_address_missing">Unable to detect display address. Only relying on display name to distinguish displays may lead to incorrect configurations.</string>
+
     <string name="use_system_color">Use system theme color</string>
     <string name="dark_theme">Dark theme</string>
     <string name="follow_system">Follow system</string>
@@ -14,12 +45,4 @@
     <string name="export_logs">Export logs</string>
     <string name="version">Version: </string>
     <string name="version_tips">No new version will be available no matter how many times you click it~</string>
-    <string-array name="log_viewer_spinner">
-        <item>Verbose</item>
-        <item>Debug</item>
-        <item>Info</item>
-        <item>Warning</item>
-        <item>Error</item>
-        <item>Assert</item>
-    </string-array>
 </resources>

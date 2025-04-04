@@ -32,7 +32,7 @@ fun AppNavHost(
             startDestination = NavRoutes.HOME
         ) {
             composable(route = NavRoutes.HOME) {
-                HomeScreen(widthSizeClass, navController, showSnackbar)
+                HomeScreen(widthSizeClass, showSnackbar)
             }
             composable(route = NavRoutes.SETTINGS) {
                 SettingsScreen(widthSizeClass, showSnackbar)

@@ -3,8 +3,39 @@
     <string name="app_name">自动旋转</string>
 
     <string name="back">返回</string>
+
     <string name="home">主页</string>
     <string name="settings">设置</string>
+
+    <string name="orientation_dynamic">动态</string>
+    <string name="orientation_default">默认</string>
+    <string name="orientation_full_sensor">传感器方向</string>
+    <string name="orientation_landscape">横屏</string>
+    <string name="orientation_reverse_landscape">反转横屏</string>
+    <string name="orientation_sensor_landscape">传感器横屏</string>
+    <string name="orientation_portrait">竖屏</string>
+    <string name="orientation_reverse_portrait">反转竖屏</string>
+    <string name="orientation_sensor_portrait">传感器竖屏</string>
+    <string name="orientation_unknown">未知</string>
+
+    <string name="current_screen">当前屏幕</string>
+    <string name="saved_orientation">已保存 %1$s 的屏幕方向</string>
+    <string name="updated_orientation">已更新 %1$s 的屏幕方向</string>
+    <string name="create_config">创建配置</string>
+    <string name="create_config_message">是否为当前屏幕创建旋转配置？\n屏幕: %1$s</string>
+    <string name="unknown">未知</string>
+    <string name="create">创建</string>
+    <string name="cancel">取消</string>
+    <string name="create_config_desc">创建配置</string>
+    <string name="config_created">已创建配置</string>
+    <string name="current_screen_format">当前屏幕: %1$s</string>
+    <string name="not_detected">未检测到</string>
+    <string name="current_orientation_format">当前方向: %1$s</string>
+    <string name="delete">删除</string>
+    <string name="config_deleted">已删除 %1$s 的配置</string>
+    <string name="screen_format">屏幕 %1$s</string>
+    <string name="display_address_missing">无法检测显示器地址，仅依靠显示器名称来区分显示器，可能会导致错误的配置。</string>
+
     <string name="use_system_color">使用系统主题颜色</string>
     <string name="dark_theme">深色主题</string>
     <string name="follow_system">跟随系统</string>
@@ -14,12 +45,4 @@
     <string name="export_logs">导出日志</string>
     <string name="version">版本: </string>
     <string name="version_tips">再怎么点也不会有新版本哦~</string>
-    <string-array name="log_viewer_spinner">
-        <item>Verbose</item>
-        <item>Debug</item>
-        <item>Info</item>
-        <item>Warning</item>
-        <item>Error</item>
-        <item>Assert</item>
-    </string-array>
 </resources>

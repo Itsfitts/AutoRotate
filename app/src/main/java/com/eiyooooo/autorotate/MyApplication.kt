@@ -1,8 +1,11 @@
 package com.eiyooooo.autorotate
 
 import android.app.Application
+import android.content.Context
+import android.os.Build
 import com.eiyooooo.autorotate.entity.Preferences
 import com.eiyooooo.autorotate.util.FLog
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import timber.log.Timber
 import java.util.Date
 
@@ -13,6 +16,13 @@ class MyApplication : Application() {
     companion object {
         lateinit var appStartTime: Date
             private set
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("L")
+        }
     }
 
     override fun onCreate() {

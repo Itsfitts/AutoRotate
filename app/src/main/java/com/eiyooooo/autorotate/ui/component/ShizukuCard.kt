@@ -1,7 +1,6 @@
 package com.eiyooooo.autorotate.ui.component
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,12 +17,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,70 +27,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiyooooo.autorotate.R
 import com.eiyooooo.autorotate.data.ShizukuStatus
-import kotlinx.coroutines.delay
-import rikka.shizuku.Shizuku
+import com.eiyooooo.autorotate.viewmodel.AutoRotateViewModel
 import timber.log.Timber
 
 @Composable
-fun ShizukuCard(modifier: Modifier = Modifier, elevation: CardElevation, showSnackbar: (String) -> Unit) {
+fun ShizukuCard(
+    modifier: Modifier = Modifier,
+    elevation: CardElevation,
+    showSnackbar: (String) -> Unit
+) {
     val context = LocalContext.current
-    var shizukuStatus by remember { mutableStateOf(ShizukuStatus.SHIZUKU_NOT_RUNNING) }
-
-    fun checkShizukuPermission() {
-        if (!Shizuku.pingBinder()) {
-            shizukuStatus = ShizukuStatus.SHIZUKU_NOT_RUNNING
-            return
-        }
-
-        if (Shizuku.isPreV11()) {
-            shizukuStatus = ShizukuStatus.VERSION_NOT_SUPPORT
-            return
-        }
-
-        shizukuStatus = if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-            ShizukuStatus.HAVE_PERMISSION
-        } else {
-            ShizukuStatus.NO_PERMISSION
-        }
-    }
-
-    DisposableEffect(Unit) {
-        val binderReceivedListener = Shizuku.OnBinderReceivedListener {
-            checkShizukuPermission()
-        }
-
-        val binderDeadListener = Shizuku.OnBinderDeadListener {
-            checkShizukuPermission()
-        }
-
-        val requestPermissionResultListener = Shizuku.OnRequestPermissionResultListener { _, grantResult ->
-            shizukuStatus = if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                ShizukuStatus.HAVE_PERMISSION
-            } else {
-                ShizukuStatus.NO_PERMISSION
-            }
-        }
-
-        Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
-        Shizuku.addBinderDeadListener(binderDeadListener)
-        Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
-
-        checkShizukuPermission()
-
-        onDispose {
-            Shizuku.removeBinderReceivedListener(binderReceivedListener)
-            Shizuku.removeBinderDeadListener(binderDeadListener)
-            Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
-        }
-    }
+    val viewModel: AutoRotateViewModel = viewModel()
+    val shizukuStatus by viewModel.shizukuStatus.collectAsState()
 
     LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            checkShizukuPermission()
-        }
+        viewModel.checkShizukuPermission()
     }
 
     when (shizukuStatus) {
@@ -117,7 +67,7 @@ fun ShizukuCard(modifier: Modifier = Modifier, elevation: CardElevation, showSna
                 showDetail = true,
                 detail = stringResource(R.string.Shizuku_authorization_instruction),
                 onClick = {
-                    Shizuku.requestPermission(0)
+                    viewModel.requestShizukuPermission()
                 },
                 modifier = modifier,
                 elevation = elevation

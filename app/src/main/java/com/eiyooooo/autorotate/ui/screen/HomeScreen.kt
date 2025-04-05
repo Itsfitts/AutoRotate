@@ -256,9 +256,11 @@ fun HomeScreen(
                                     Text(
                                         text = stringResource(
                                             R.string.current_screen_format,
-                                            if (selectedTabIndex == 0) currentDisplayName?.let {
-                                                stringResource(R.string.screen_format, it.extractSecondParameter() ?: it)
-                                            } ?: stringResource(R.string.not_detected) else configs[selectedTabIndex - 1].displayName
+                                            if (selectedTabIndex == 0) {
+                                                currentDisplayName?.let {
+                                                    stringResource(R.string.screen_format, it.extractSecondParameter() ?: it)
+                                                } ?: stringResource(R.string.not_detected)
+                                            } else stringResource(R.string.screen_format, configs[selectedTabIndex - 1].displayName)
                                         ),
                                         style = MaterialTheme.typography.titleMedium
                                     )
@@ -305,9 +307,11 @@ fun HomeScreen(
                                     Text(
                                         text = stringResource(
                                             R.string.current_screen_format,
-                                            if (selectedTabIndex == 0) currentDisplayName?.let {
-                                                stringResource(R.string.screen_format, it.extractSecondParameter() ?: it)
-                                            } ?: stringResource(R.string.not_detected) else configs[selectedTabIndex - 1].displayName
+                                            if (selectedTabIndex == 0) {
+                                                currentDisplayName?.let {
+                                                    stringResource(R.string.screen_format, it.extractSecondParameter() ?: it)
+                                                } ?: stringResource(R.string.not_detected)
+                                            } else stringResource(R.string.screen_format, configs[selectedTabIndex - 1].displayName)
                                         ),
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(16.dp)

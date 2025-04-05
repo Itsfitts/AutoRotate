@@ -36,6 +36,14 @@
     <string name="screen_format">Screen %1$s</string>
     <string name="display_address_missing">Unable to detect display address. Only relying on display name to distinguish displays may lead to incorrect configurations.</string>
 
+    <string name="no_browser">No default browser</string>
+
+    <string name="Shizuku_explanation">Authorize Shizuku to enable functionality</string>
+    <string name="Shizuku_connected">Shizuku connected</string>
+    <string name="Shizuku_need_update">Shizuku version is outdated, please update</string>
+    <string name="Shizuku_setup_instruction">Shizuku is not running, click to view Shizuku setup instructions</string>
+    <string name="Shizuku_authorization_instruction">Once Shizuku permissions are granted, the app will have elevated privileges beyond regular apps, please be mindful of your device\'s security, click to grant Shizuku permission to this app</string>
+
     <string name="use_system_color">Use system theme color</string>
     <string name="dark_theme">Dark theme</string>
     <string name="follow_system">Follow system</string>

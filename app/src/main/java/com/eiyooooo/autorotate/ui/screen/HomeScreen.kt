@@ -52,11 +52,10 @@ import com.eiyooooo.autorotate.R
 import com.eiyooooo.autorotate.data.ScreenConfig
 import com.eiyooooo.autorotate.data.ScreenConfigRepository
 import com.eiyooooo.autorotate.data.getDynamicOrientationOptions
-import com.eiyooooo.autorotate.data.getLandscapeOrientationOptions
 import com.eiyooooo.autorotate.data.getOrientationName
-import com.eiyooooo.autorotate.data.getPortraitOrientationOptions
 import com.eiyooooo.autorotate.ui.component.OrientationControlButton
 import com.eiyooooo.autorotate.ui.component.OrientationSectionTitle
+import com.eiyooooo.autorotate.ui.component.ShizukuCard
 import com.eiyooooo.autorotate.util.extractSecondParameter
 import com.eiyooooo.autorotate.util.getDisplayAddress
 import kotlinx.coroutines.launch
@@ -245,7 +244,19 @@ fun HomeScreen(
 
                 when (widthSizeClass) {
                     WindowWidthSizeClass.Compact -> {
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            ShizukuCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                showSnackbar = showSnackbar
+                            )
+
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -296,9 +307,19 @@ fun HomeScreen(
                             Column(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .padding(end = 8.dp),
-                                verticalArrangement = Arrangement.Top
+                                    .padding(end = 8.dp)
+                                    .verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.Top,
                             ) {
+                                ShizukuCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    elevation = CardDefaults.cardElevation(4.dp),
+                                    showSnackbar = showSnackbar
+                                )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth(),
@@ -322,8 +343,7 @@ fun HomeScreen(
 
                                 Card(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 8.dp),
+                                        .fillMaxWidth(),
                                     elevation = CardDefaults.cardElevation(4.dp)
                                 ) {
                                     Text(
@@ -358,6 +378,7 @@ fun HomeScreen(
                                     .weight(if (widthSizeClass == WindowWidthSizeClass.Expanded) 2f else 1.5f)
                                     .fillMaxHeight()
                                     .padding(start = 8.dp)
+                                    .verticalScroll(rememberScrollState()),
                             ) {
                                 OrientationLayout(
                                     currentOrientation = currentOrientation,
@@ -378,14 +399,11 @@ fun OrientationLayout(
     onOrientationSelected: (Int) -> Unit,
 ) {
     val dynamicOptions = getDynamicOrientationOptions()
-    val landscapeOptions = getLandscapeOrientationOptions()
-    val portraitOptions = getPortraitOrientationOptions()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         OrientationSectionTitle(stringResource(R.string.orientation_dynamic))
 
@@ -399,34 +417,6 @@ fun OrientationLayout(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OrientationSectionTitle(stringResource(R.string.orientation_landscape))
-
-        Row(Modifier.fillMaxWidth()) {
-            landscapeOptions.forEach { option ->
-                OrientationControlButton(
-                    option = option,
-                    isSelected = currentOrientation == option.orientation,
-                    onClick = { onOrientationSelected(option.orientation) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-
-        OrientationSectionTitle(stringResource(R.string.orientation_portrait))
-
-        Row(Modifier.fillMaxWidth()) {
-            portraitOptions.forEach { option ->
-                OrientationControlButton(
-                    option = option,
-                    isSelected = currentOrientation == option.orientation,
-                    onClick = { onOrientationSelected(option.orientation) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
         }
     }
 }

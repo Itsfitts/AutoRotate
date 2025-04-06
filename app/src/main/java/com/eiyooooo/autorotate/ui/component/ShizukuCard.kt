@@ -1,5 +1,6 @@
 package com.eiyooooo.autorotate.ui.component
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -111,22 +112,48 @@ fun ShizukuCard(
                 showDetail = true,
                 detail = stringResource(R.string.Shizuku_setup_instruction),
                 onClick = {
-                    try {
-                        val intent = Intent(Intent.ACTION_VIEW).apply {
-                            addCategory(Intent.CATEGORY_BROWSABLE)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            data = "https://shizuku.rikka.app/zh-hans/guide/setup/".toUri()
+                    val shizukuPackageName = "moe.shizuku.privileged.api"
+                    var appLaunched = false
+                    if (context.isPackageInstalled(shizukuPackageName)) {
+                        try {
+                            val launchIntent = context.packageManager.getLaunchIntentForPackage(shizukuPackageName)
+                            if (launchIntent != null) {
+                                context.startActivity(launchIntent)
+                            } else {
+                                throw RuntimeException("Cannot launch Shizuku app")
+                            }
+                        } catch (t: Throwable) {
+                            Timber.e(t, "Open Shizuku app failed")
                         }
-                        context.startActivity(intent)
-                    } catch (t: Throwable) {
-                        Timber.e(t, "Open Shizuku instruction failed")
-                        showSnackbar(context.getString(R.string.no_browser))
+                        appLaunched = true
+                    }
+                    if (!appLaunched) {
+                        try {
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                addCategory(Intent.CATEGORY_BROWSABLE)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                data = "https://shizuku.rikka.app/zh-hans/guide/setup/".toUri()
+                            }
+                            context.startActivity(intent)
+                        } catch (t: Throwable) {
+                            Timber.e(t, "Open Shizuku instruction failed")
+                            showSnackbar(context.getString(R.string.no_browser))
+                        }
                     }
                 },
                 modifier = modifier,
                 elevation = elevation
             )
         }
+    }
+}
+
+private fun Context.isPackageInstalled(packageName: String): Boolean {
+    return try {
+        packageManager.getPackageInfo(packageName, 0)
+        true
+    } catch (t: Throwable) {
+        false
     }
 }
 

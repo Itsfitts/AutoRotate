@@ -1,14 +1,12 @@
 package com.eiyooooo.autorotate.service
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.util.Log
 import com.eiyooooo.autorotate.data.ScreenConfig
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import com.eiyooooo.autorotate.wrapper.DisplayManager
+import com.eiyooooo.autorotate.wrapper.DisplayMonitor
+import com.eiyooooo.autorotate.wrapper.WindowManager
 import kotlin.system.exitProcess
 
 @SuppressLint("LogNotTimber")
@@ -16,33 +14,47 @@ class AutoRotateService : IAutoRotateService.Stub() {
 
     private val configs = mutableListOf<ScreenConfig>()
 
-    private val scope = CoroutineScope(Dispatchers.Default)
-    private var job: Job? = null
+    private lateinit var displayMonitor: DisplayMonitor
 
     override fun updateConfigs(newConfigs: List<ScreenConfig>) {
         configs.clear()
         configs.addAll(newConfigs)
         Log.d("AutoRotateService", "Received ${configs.size} configs")
-        job?.cancel()
-        if (configs.isNotEmpty()) {
-            job = scope.launch {
-                var message = 0
-                while (isActive) {
-                    delay(5000)
-                    message++
-                    Log.d("AutoRotateService", "Message: $message")
-                    for (config in configs) {
-                        Log.d(
-                            "AutoRotateService",
-                            "Received config: orientation: ${config.orientation}, address: ${config.displayAddress}, displayName: ${config.displayName}"
-                        )
-                    }
+
+        updateAllDisplayRotation()
+
+        if (!::displayMonitor.isInitialized) {
+            displayMonitor = DisplayMonitor().apply {
+                start { eventDisplayId ->
+                    Log.d("AutoRotateService", "Received display event at displayId: $eventDisplayId")
+                    updateAllDisplayRotation()
                 }
             }
         }
     }
 
+    private fun updateAllDisplayRotation() {
+        val allDisplayInfo = DisplayManager.getInstance().getAllDisplayInfo()
+        for (displayInfo in allDisplayInfo) {
+            displayInfo.address?.let { displayAddress ->
+                configs.find { it.displayAddress == displayAddress.toString() }?.let { config ->
+                    Log.d("AutoRotateService", "Updating display rotation for displayId: ${displayInfo.displayId}")
+                    if (config.orientation == ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR) {
+                        WindowManager.getInstance().thawRotation(displayInfo.displayId)
+                    } else if (config.orientation == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+                        WindowManager.getInstance().freezeRotation(displayInfo.displayId, displayInfo.rotation)
+                    }
+                }
+            } ?: run {
+                Log.d("AutoRotateService", "No address found for displayId: ${displayInfo.displayId}")
+            }
+        }
+    }
+
     override fun destroy() {
+        if (::displayMonitor.isInitialized) {
+            displayMonitor.stopAndRelease()
+        }
         exitProcess(0)
     }
 }

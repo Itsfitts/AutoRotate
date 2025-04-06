@@ -14,8 +14,7 @@ private fun <T> getFieldValue(obj: Any, fieldName: String): T? {
 
 fun Display.getDisplayAddress(): DisplayAddress? {
     return try {
-        val displayInfo = getFieldValue<DisplayInfo>(this, "mDisplayInfo") ?: return null
-        getFieldValue(displayInfo, "address")
+        getFieldValue<DisplayInfo>(this, "mDisplayInfo")?.address ?: return null
     } catch (t: Throwable) {
         Timber.e("getDisplayAddress error: ${t.message}")
         null

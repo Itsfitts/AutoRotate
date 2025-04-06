@@ -15,6 +15,7 @@ class AutoRotateViewModel(application: Application) : AndroidViewModel(applicati
     private val repository = ScreenConfigRepository(application)
 
     val shizukuStatus: StateFlow<ShizukuStatus> = shizukuServiceManager.shizukuStatus
+    val serviceEnabled: StateFlow<Boolean> = shizukuServiceManager.serviceEnabled
 
     init {
         viewModelScope.launch {
@@ -30,6 +31,10 @@ class AutoRotateViewModel(application: Application) : AndroidViewModel(applicati
 
     fun checkShizukuPermission() {
         shizukuServiceManager.checkShizukuPermission()
+    }
+
+    fun setServiceEnabled(enabled: Boolean) {
+        shizukuServiceManager.setServiceEnabled(enabled)
     }
 
     override fun onCleared() {

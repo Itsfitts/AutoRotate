@@ -44,4 +44,8 @@ object Preferences {
 
     val enableLogFlow
         get() = flowSharedPreferences.getBoolean("enable_log", BuildConfig.DEBUG).asFlow()
+
+    var serviceEnabled
+        get() = sharedPreferences.get("service_enabled", true)
+        set(value) = sharedPreferences.put("service_enabled", value)
 }

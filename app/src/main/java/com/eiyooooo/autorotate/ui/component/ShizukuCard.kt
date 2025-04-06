@@ -15,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +43,7 @@ fun ShizukuCard(
     val context = LocalContext.current
     val viewModel: AutoRotateViewModel = viewModel()
     val shizukuStatus by viewModel.shizukuStatus.collectAsState()
+    val serviceEnabled by viewModel.serviceEnabled.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.checkShizukuPermission()
@@ -50,13 +52,17 @@ fun ShizukuCard(
     when (shizukuStatus) {
         ShizukuStatus.HAVE_PERMISSION -> {
             ShizukuContentCard(
+                modifier = modifier,
+                elevation = elevation,
                 icon = R.drawable.shizuku,
                 title = stringResource(R.string.Shizuku_connected),
-                showDetail = false,
+                showDetail = true,
                 detail = "",
-                onClick = null,
-                modifier = modifier,
-                elevation = elevation
+                showSwitch = true,
+                switchChecked = serviceEnabled,
+                onSwitchChanged = { viewModel.setServiceEnabled(it) },
+                switchLabel = stringResource(R.string.enable_service),
+                onClick = null
             )
         }
 
@@ -126,13 +132,17 @@ fun ShizukuCard(
 
 @Composable
 private fun ShizukuContentCard(
+    modifier: Modifier = Modifier,
+    elevation: CardElevation,
     icon: Int,
     title: String,
     showDetail: Boolean,
     detail: String,
-    onClick: (() -> Unit)?,
-    modifier: Modifier = Modifier,
-    elevation: CardElevation
+    showSwitch: Boolean = false,
+    switchChecked: Boolean = false,
+    onSwitchChanged: ((Boolean) -> Unit)? = null,
+    switchLabel: String = "",
+    onClick: (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -158,7 +168,7 @@ private fun ShizukuContentCard(
                 )
             }
 
-            if (showDetail) {
+            if (showDetail && detail.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
@@ -166,6 +176,26 @@ private fun ShizukuContentCard(
                     text = detail,
                     style = MaterialTheme.typography.bodyMedium
                 )
+            }
+
+            if (showSwitch) {
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = switchLabel,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = switchChecked,
+                        onCheckedChange = onSwitchChanged
+                    )
+                }
             }
         }
     }

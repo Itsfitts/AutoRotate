@@ -7,6 +7,7 @@ import android.os.IBinder
 import com.eiyooooo.autorotate.BuildConfig
 import com.eiyooooo.autorotate.data.ScreenConfig
 import com.eiyooooo.autorotate.data.ShizukuStatus
+import com.eiyooooo.autorotate.entity.Preferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import rikka.shizuku.Shizuku
@@ -16,6 +17,9 @@ class ShizukuServiceManager {
 
     private val _shizukuStatus = MutableStateFlow(ShizukuStatus.SHIZUKU_NOT_RUNNING)
     val shizukuStatus: StateFlow<ShizukuStatus> = _shizukuStatus
+
+    private val _serviceEnabled = MutableStateFlow(Preferences.serviceEnabled)
+    val serviceEnabled: StateFlow<Boolean> = _serviceEnabled
 
     private var tempConfigs: List<ScreenConfig>? = null
     private var service: IAutoRotateService? = null
@@ -83,6 +87,19 @@ class ShizukuServiceManager {
         Shizuku.removeRequestPermissionResultListener(permissionListener)
     }
 
+    fun setServiceEnabled(enabled: Boolean) {
+        _serviceEnabled.value = enabled
+        Preferences.serviceEnabled = enabled
+
+        if (enabled) {
+            if (_shizukuStatus.value == ShizukuStatus.HAVE_PERMISSION) {
+                bindService()
+            }
+        } else {
+            unbindService()
+        }
+    }
+
     fun requestPermission() {
         if (!Shizuku.pingBinder()) {
             _shizukuStatus.value = ShizukuStatus.SHIZUKU_NOT_RUNNING
@@ -139,12 +156,25 @@ class ShizukuServiceManager {
     }
 
     private fun bindService() {
+        if (!_serviceEnabled.value) return
+
         try {
             Shizuku.unbindUserService(userServiceArgs, serviceConnection, true)
             Shizuku.bindUserService(userServiceArgs, serviceConnection)
+            Timber.d("Bind service successfully")
         } catch (e: Exception) {
             Timber.e(e, "Bind service failed")
             service = null
+        }
+    }
+
+    private fun unbindService() {
+        try {
+            Shizuku.unbindUserService(userServiceArgs, serviceConnection, true)
+            service = null
+            Timber.d("Unbind service successfully")
+        } catch (e: Exception) {
+            Timber.e(e, "Unbind service failed")
         }
     }
 

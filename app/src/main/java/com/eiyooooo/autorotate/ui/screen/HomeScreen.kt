@@ -252,6 +252,8 @@ fun HomeScreen(
                                 .verticalScroll(rememberScrollState()),
                             verticalArrangement = Arrangement.Top,
                         ) {
+                            Spacer(modifier = Modifier.height(8.dp))
+
                             ShizukuCard(
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -308,6 +310,8 @@ fun HomeScreen(
                                     )
                                 }
                             }
+
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
 
                         Box(

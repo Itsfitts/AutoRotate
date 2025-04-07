@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -177,10 +177,9 @@ private fun ShizukuContentCard(
             .clickable(enabled = onClick != null) { onClick?.invoke() },
         elevation = elevation
     ) {
-        Column(
-            modifier = Modifier.padding(18.dp)
-        ) {
+        Column {
             Row(
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -196,32 +195,35 @@ private fun ShizukuContentCard(
             }
 
             if (showDetail && detail.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 Text(
+                    modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
                     text = detail,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
             if (showSwitch) {
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                Column(
+                    modifier = Modifier
+                        .clickable { onSwitchChanged?.invoke(!switchChecked) },
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = switchLabel,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Switch(
-                        checked = switchChecked,
-                        onCheckedChange = onSwitchChanged
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+                    ) {
+                        Text(
+                            text = switchLabel,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Switch(
+                            checked = switchChecked,
+                            onCheckedChange = onSwitchChanged
+                        )
+                    }
                 }
             }
         }

@@ -20,16 +20,10 @@
 
     <string name="current_screen">当前屏幕</string>
     <string name="saved_orientation">已保存 %1$s 的屏幕方向</string>
+    <string name="save_orientation_failed">保存屏幕方向失败</string>
     <string name="updated_orientation">已更新 %1$s 的屏幕方向</string>
-    <string name="create_config">创建配置</string>
-    <string name="create_config_message">是否为当前屏幕创建旋转配置？\n屏幕: %1$s</string>
-    <string name="unknown">未知</string>
-    <string name="create">创建</string>
-    <string name="cancel">取消</string>
-    <string name="create_config_desc">创建配置</string>
-    <string name="config_created">已创建配置</string>
     <string name="current_screen_format">当前屏幕: %1$s</string>
-    <string name="not_detected">未检测到</string>
+    <string name="unknown">未知</string>
     <string name="current_orientation_format">当前方向: %1$s</string>
     <string name="delete">删除</string>
     <string name="config_deleted">已删除 %1$s 的配置</string>

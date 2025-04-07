@@ -20,16 +20,10 @@
 
     <string name="current_screen">Current Screen</string>
     <string name="saved_orientation">Saved screen orientation for %1$s</string>
+    <string name="save_orientation_failed">Save screen orientation failed</string>
     <string name="updated_orientation">Updated screen orientation for %1$s</string>
-    <string name="create_config">Create Configuration</string>
-    <string name="create_config_message">Create rotation configuration for current screen?\nScreen: %1$s</string>
-    <string name="unknown">Unknown</string>
-    <string name="create">Create</string>
-    <string name="cancel">Cancel</string>
-    <string name="create_config_desc">Create configuration</string>
-    <string name="config_created">Configuration created</string>
     <string name="current_screen_format">Current screen: %1$s</string>
-    <string name="not_detected">Not detected</string>
+    <string name="unknown">Unknown</string>
     <string name="current_orientation_format">Current orientation: %1$s</string>
     <string name="delete">Delete</string>
     <string name="config_deleted">Deleted configuration for %1$s</string>

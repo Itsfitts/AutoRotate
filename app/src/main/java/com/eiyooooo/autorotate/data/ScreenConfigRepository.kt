@@ -38,7 +38,15 @@ class ScreenConfigRepository(private val context: Context) {
                 }
             } ?: emptyList()
 
-            val updatedConfigs = currentConfigs.filter { it.displayAddress != config.displayAddress } + config
+            val updatedConfigs = currentConfigs.toMutableList()
+            val existingIndex = updatedConfigs.indexOfFirst { it.displayAddress == config.displayAddress }
+
+            if (existingIndex >= 0) {
+                updatedConfigs[existingIndex] = config
+            } else {
+                updatedConfigs.add(config)
+            }
+
             preferences[CONFIGS_KEY] = json.encodeToString(updatedConfigs)
         }
     }

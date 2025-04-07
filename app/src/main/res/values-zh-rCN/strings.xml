@@ -47,5 +47,4 @@
     <string name="enable_log">开启日志输出</string>
     <string name="export_logs">导出日志</string>
     <string name="version">版本: </string>
-    <string name="version_tips">再怎么点也不会有新版本哦~</string>
 </resources>

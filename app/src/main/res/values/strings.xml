@@ -47,5 +47,4 @@
     <string name="enable_log">"Enable log output</string>
     <string name="export_logs">Export logs</string>
     <string name="version">Version: </string>
-    <string name="version_tips">No new version will be available no matter how many times you click it~</string>
 </resources>

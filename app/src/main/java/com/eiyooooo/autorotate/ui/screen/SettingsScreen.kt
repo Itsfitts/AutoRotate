@@ -1,6 +1,7 @@
 package com.eiyooooo.autorotate.ui.screen
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.eiyooooo.autorotate.BuildConfig
 import com.eiyooooo.autorotate.R
 import com.eiyooooo.autorotate.entity.Preferences
@@ -36,6 +38,7 @@ import com.eiyooooo.autorotate.ui.component.SettingClickableItem
 import com.eiyooooo.autorotate.ui.component.SettingDropdownItem
 import com.eiyooooo.autorotate.ui.component.SettingSwitchItem
 import com.eiyooooo.autorotate.util.FLog
+import timber.log.Timber
 
 @Composable
 fun OtherSettingsContent() {
@@ -126,7 +129,17 @@ fun AboutContent(showSnackbar: (String) -> Unit) {
         SettingClickableItem(
             title = stringResource(R.string.version) + BuildConfig.VERSION_NAME,
             onClick = {
-                showSnackbar(context.getString(R.string.version_tips))
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        addCategory(Intent.CATEGORY_BROWSABLE)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        data = "https://github.com/eiyooooo/AutoRotate".toUri()
+                    }
+                    context.startActivity(intent)
+                } catch (t: Throwable) {
+                    Timber.e(t, "Open Shizuku instruction failed")
+                    showSnackbar(context.getString(R.string.no_browser))
+                }
             },
             isFirst = true,
             isLast = true

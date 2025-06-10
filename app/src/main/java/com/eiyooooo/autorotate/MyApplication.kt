@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import com.eiyooooo.autorotate.entity.Preferences
+import com.eiyooooo.autorotate.service.ShizukuServiceManager
 import com.eiyooooo.autorotate.util.FLog
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import timber.log.Timber
@@ -17,6 +18,9 @@ class MyApplication : Application() {
         lateinit var appStartTime: Date
             private set
     }
+
+    lateinit var shizukuServiceManager: ShizukuServiceManager
+        private set
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -35,5 +39,7 @@ class MyApplication : Application() {
         FLog.init(this)
         if (Preferences.enableLog) FLog.startFLog()
         Timber.i("App started at: $appStartTime")
+
+        shizukuServiceManager = ShizukuServiceManager(this)
     }
 }

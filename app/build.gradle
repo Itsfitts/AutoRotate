@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation 'com.fredporciuncula:flow-preferences:1.9.1'
     implementation 'androidx.datastore:datastore-preferences:1.1.7'
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3'
 
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
     implementation "dev.rikka.shizuku:api:13.1.5"

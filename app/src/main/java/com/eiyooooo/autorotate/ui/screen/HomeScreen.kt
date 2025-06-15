@@ -43,8 +43,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.eiyooooo.autorotate.R
+import com.eiyooooo.autorotate.application
 import com.eiyooooo.autorotate.data.ScreenConfig
-import com.eiyooooo.autorotate.data.ScreenConfigRepository
 import com.eiyooooo.autorotate.data.getDynamicOrientationOptions
 import com.eiyooooo.autorotate.data.getOrientationName
 import com.eiyooooo.autorotate.ui.component.OrientationControlButton
@@ -60,10 +60,9 @@ fun HomeScreen(
     showSnackbar: (String) -> Unit,
 ) {
     val context = LocalContext.current
-    val repository = remember { ScreenConfigRepository(context) }
     val scope = rememberCoroutineScope()
 
-    val configs by repository.configs.collectAsState(initial = emptyList())
+    val configs by application.shizukuServiceManager.configs.collectAsState(initial = emptyList())
     var currentOrientation by remember { mutableIntStateOf(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) }
     var currentDisplayAddress by remember { mutableStateOf<String?>(null) }
     var currentDisplayName by remember { mutableStateOf<String?>(null) }
@@ -105,7 +104,7 @@ fun HomeScreen(
                 showSnackbar(context.getString(R.string.save_orientation_failed))
             } else {
                 scope.launch {
-                    repository.saveConfig(
+                    application.shizukuServiceManager.saveConfig(
                         ScreenConfig(
                             displayAddress = displayAddress,
                             displayName = displayName,
@@ -118,7 +117,7 @@ fun HomeScreen(
         } else if (selectedTabIndex <= configs.size) {
             val config = configs[selectedTabIndex - 1]
             scope.launch {
-                repository.saveConfig(
+                application.shizukuServiceManager.saveConfig(
                     ScreenConfig(
                         displayAddress = config.displayAddress,
                         displayName = config.displayName,
@@ -166,7 +165,7 @@ fun HomeScreen(
                                         IconButton(
                                             onClick = {
                                                 scope.launch {
-                                                    repository.deleteConfig(config.displayAddress)
+                                                    application.shizukuServiceManager.deleteConfig(config.displayAddress)
                                                     showSnackbar(context.getString(R.string.config_deleted, config.displayName))
                                                     selectedTabIndex = 0
                                                 }

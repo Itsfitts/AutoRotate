@@ -1,6 +1,7 @@
 package com.eiyooooo.autorotate.service
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.util.Log
 import com.eiyooooo.autorotate.data.ScreenConfig
@@ -10,11 +11,19 @@ import com.eiyooooo.autorotate.wrapper.WindowManager
 import kotlin.system.exitProcess
 
 @SuppressLint("LogNotTimber")
-class AutoRotateService : IAutoRotateService.Stub() {
+class AutoRotateService : IAutoRotateService.Stub {
 
     private val configs = mutableListOf<ScreenConfig>()
 
     private lateinit var displayMonitor: DisplayMonitor
+
+    constructor() {
+        Log.d("AutoRotateService", "AutoRotateService initialized")
+    }
+
+    constructor(context: Context) {
+        Log.d("AutoRotateService", "AutoRotateService initialized, context: $context")
+    }
 
     override fun updateConfigs(newConfigs: List<ScreenConfig>) {
         configs.clear()

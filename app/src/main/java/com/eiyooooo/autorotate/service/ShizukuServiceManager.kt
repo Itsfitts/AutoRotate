@@ -1,25 +1,36 @@
 package com.eiyooooo.autorotate.service
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import com.eiyooooo.autorotate.BuildConfig
 import com.eiyooooo.autorotate.data.ScreenConfig
+import com.eiyooooo.autorotate.data.ScreenConfigRepository
 import com.eiyooooo.autorotate.data.ShizukuStatus
 import com.eiyooooo.autorotate.entity.Preferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 import timber.log.Timber
 
-class ShizukuServiceManager {
+class ShizukuServiceManager(context: Context) {
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val repository = ScreenConfigRepository(context)
 
     private val _shizukuStatus = MutableStateFlow(ShizukuStatus.SHIZUKU_NOT_RUNNING)
     val shizukuStatus: StateFlow<ShizukuStatus> = _shizukuStatus
 
     private val _serviceEnabled = MutableStateFlow(Preferences.serviceEnabled)
     val serviceEnabled: StateFlow<Boolean> = _serviceEnabled
+
+    val configs = repository.configs
 
     private var tempConfigs: List<ScreenConfig>? = null
     private var service: IAutoRotateService? = null
@@ -79,12 +90,12 @@ class ShizukuServiceManager {
                 bindService()
             }
         }
-    }
 
-    fun destroy() {
-        Shizuku.removeBinderReceivedListener(bindListener)
-        Shizuku.removeBinderDeadListener(bindDeadListener)
-        Shizuku.removeRequestPermissionResultListener(permissionListener)
+        scope.launch {
+            repository.configs.collect { newConfigs ->
+                updateConfigs(newConfigs)
+            }
+        }
     }
 
     fun setServiceEnabled(enabled: Boolean) {
@@ -176,6 +187,14 @@ class ShizukuServiceManager {
         } catch (e: Exception) {
             Timber.e(e, "Unbind service failed")
         }
+    }
+
+    suspend fun saveConfig(config: ScreenConfig) {
+        repository.saveConfig(config)
+    }
+
+    suspend fun deleteConfig(displayAddress: String) {
+        repository.deleteConfig(displayAddress)
     }
 
     companion object {

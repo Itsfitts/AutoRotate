@@ -29,10 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiyooooo.autorotate.R
+import com.eiyooooo.autorotate.application
 import com.eiyooooo.autorotate.data.ShizukuStatus
-import com.eiyooooo.autorotate.viewmodel.AutoRotateViewModel
 import timber.log.Timber
 
 @Composable
@@ -42,12 +41,11 @@ fun ShizukuCard(
     showSnackbar: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel: AutoRotateViewModel = viewModel()
-    val shizukuStatus by viewModel.shizukuStatus.collectAsState()
-    val serviceEnabled by viewModel.serviceEnabled.collectAsState()
+    val shizukuStatus by application.shizukuServiceManager.shizukuStatus.collectAsState()
+    val serviceEnabled by application.shizukuServiceManager.serviceEnabled.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.checkShizukuPermission()
+        application.shizukuServiceManager.checkShizukuPermission()
     }
 
     when (shizukuStatus) {
@@ -61,7 +59,7 @@ fun ShizukuCard(
                 detail = "",
                 showSwitch = true,
                 switchChecked = serviceEnabled,
-                onSwitchChanged = { viewModel.setServiceEnabled(it) },
+                onSwitchChanged = { application.shizukuServiceManager.setServiceEnabled(it) },
                 switchLabel = stringResource(R.string.enable_service),
                 onClick = null
             )
@@ -74,7 +72,7 @@ fun ShizukuCard(
                 showDetail = true,
                 detail = stringResource(R.string.Shizuku_authorization_instruction),
                 onClick = {
-                    viewModel.requestShizukuPermission()
+                    application.shizukuServiceManager.requestPermission()
                 },
                 modifier = modifier,
                 elevation = elevation
